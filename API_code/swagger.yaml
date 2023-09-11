@@ -1,0 +1,182 @@
+openapi: 3.0.3
+info:
+  title: Binar Challenge Platinum
+  version: 1.0.0
+  description: Analyze Tweet Sentiment
+  termsOfService: 
+  contact:
+    name: Kelompok 2 - Data science wave 10
+    email: 
+    url: 
+  license:
+    name:
+    url: 
+servers:
+  - description:
+    url: /
+externalDocs:
+  description: Github Code - Binar Platinum Challenge
+  url: 
+paths:
+  /:
+    get:
+      summary: Welcome Page
+      description: Welcome
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Misunderstood
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  /RNN/text:
+    post:
+      summary: Post a text
+      description: Post a text and get the sentiment
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Misunderstood
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  /RNN/file:
+    post:
+      summary: Post a csv file
+      description: Post a csv file to get sentiment
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: base64
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Misunderstood
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  /LSTM/text:
+    post:
+      summary: Post a text
+      description: Post a text and get the sentiment
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Misunderstood
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  /LSTM/file:
+    post:
+      summary: Post a csv file
+      description: Post a csv file to get sentiment
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: base64
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Misunderstood
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  /CNN/text:
+    post:
+      summary: Post a text
+      description: Post a text and get the sentiment
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Misunderstood
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  /CNN/file:
+    post:
+      summary: Post a csv file
+      description: Post a csv file to get sentiment
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: base64
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Misunderstood
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
