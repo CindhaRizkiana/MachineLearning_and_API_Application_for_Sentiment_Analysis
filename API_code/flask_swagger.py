@@ -1,11 +1,12 @@
 import pandas as pd
 from flask import Flask, request, jsonify, make_response, Response, render_template
 from flask_swagger_ui import get_swaggerui_blueprint
-from sentimentprediction import sentiment_text, sentiment_file
+from sentimentprediction_NN import sentiment_text, sentiment_file
+import joblib
 
 # Init app
 app = Flask(__name__)
-app.config['JSON_SORT_KEYS'] = False  #Agar Return JSON dalam urutan yang benar
+app.config['JSON_SORT_KEYS'] = False 
 
 # flask swagger configs
 SWAGGER_URL = '/swagger'
@@ -131,6 +132,45 @@ def LSTM_file():
         print(type(file))
         if(isinstance(file, pd.DataFrame)):
             file = sentiment_file(file,'LSTM')
+            if(isinstance(file, pd.DataFrame)):
+                response = Response(file.to_json(orient="records"), mimetype='application/json')
+            else:
+                response = "Error"
+        else:
+            response = "Error"
+        return response
+    
+
+
+
+@app.route('/NN/text', methods=["POST"])
+def mlp_model_text():
+    if request.method == "POST":
+        input_text = str(request.form["text"])
+        sentiment = sentiment_text(input_text,'mlp_model')
+        
+        output = dict(input=input_text, sentiment=sentiment)
+        return jsonify(output)
+
+@app.route('/NN/file', methods=["POST"])
+def mlp_model_file():
+    if request.method == "POST":
+        file = request.files['file']
+
+        try:
+            file = pd.read_csv(file, encoding='iso-8859-1')
+        except:
+            try:
+                file = pd.read_csv(file, encoding='utf-8')
+            except:
+                try:
+                    file = pd.read_csv(file, sep='\t')
+                except:
+                    pass
+        print("======== read data csv to pandas =========")
+        print(type(file))
+        if(isinstance(file, pd.DataFrame)):
+            file = sentiment_file(file,'mlp_model')
             if(isinstance(file, pd.DataFrame)):
                 response = Response(file.to_json(orient="records"), mimetype='application/json')
             else:
