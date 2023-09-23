@@ -1,13 +1,10 @@
 from keras.models import load_model
 import re 
 import pickle 
-import pandas as pd
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.text import Tokenizer
 from keras_preprocessing.sequence import pad_sequences
-import numpy as np
 from keras.models import load_model
-import numpy as np
 import pandas as pd
 import pickle
 from keras.models import Sequential
@@ -15,6 +12,14 @@ from keras.layers import Dense
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
+from sklearn.neural_network import MLPClassifier
+import numpy as np
+import joblib
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import load_model
+
 
 
 df= pd.read_csv('train_preprocess.tsv', sep='\t', header=None)
@@ -70,25 +75,33 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_
 
 embed_dim = 100
 units = 64
-"""
-# Create a Keras Sequential model
-model = Sequential()
-model.add(Dense(128, input_dim=maxlen, activation='relu'))  # Adjust input_dim
-model.add(Dense(64, activation='relu'))
-model.add(Dense(3, activation='softmax'))  # 3 output classes for sentiment
 
-# Compile the model
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+# Create an MLP Classifier model
+mlp_classifier = MLPClassifier(
+    hidden_layer_sizes=(128, 64),  # Define the architecture 
+    activation='relu',             # Activation function for hidden layers
+    solver='adam',                 # Optimizer algorithm
+    max_iter=100,                  # Maximum number of iterations
+    random_state=42                # Random seed for reproducibility
+)
 
-# Train the model on your data
-model.fit(X_train, Y_train, epochs=10, batch_size=32, validation_split=0.1)
+# Train the MLP model on the training data
+mlp_classifier.fit(X_train, Y_train)
 
 # Evaluate the model on the test data
-Y_pred = model.predict(X_test)
-Y_pred_labels = np.argmax(Y_pred, axis=1)
-Y_test_labels = np.argmax(Y_test, axis=1)
-print(classification_report(Y_test_labels, Y_pred_labels))
-"""
+accuracy = mlp_classifier.score(X_test, Y_test)
+print(f"Test Accuracy: {accuracy}")
+
+# Convert the MLP Classifier to a Keras Sequential model
+model = Sequential()
+for i, layer in enumerate(mlp_classifier.hidden_layer_sizes, start=1):
+    model.add(Dense(layer, activation='relu', input_dim=X_train.shape[1]) if i == 1
+              else Dense(layer, activation='relu'))
+model.add(Dense(len(np.unique(Y_train)), activation='softmax'))  # Output layer
+
+# Save the Keras model in HDF5 format
+model.save("mlp_model.h5")
+print(f"Trained MLP model saved to mlp_model.h5")
 
 input_text = """ 
 beta sedang berjuang melawan kanker
@@ -96,7 +109,6 @@ beta sedang berjuang melawan kanker
 
 sentiment = ['negative', 'neutral', 'positive']
 model = load_model('mlp_model.h5')
-
 
 
 def sentiment_text(input_text, model):
