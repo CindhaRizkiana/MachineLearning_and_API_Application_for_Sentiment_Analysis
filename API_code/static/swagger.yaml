@@ -180,3 +180,52 @@ paths:
           description: Not Found
         '500':
           description: Server Error
+  /NN/text:
+    post:
+      summary: Post a text
+      description: Post a text and get the sentiment
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Misunderstood
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
+  /NN/file:
+    post:
+      summary: Post a csv file
+      description: Post a csv file to get sentiment
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: base64
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Misunderstood
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error
