@@ -70,7 +70,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_
 
 embed_dim = 100
 units = 64
-
+"""
 # Create a Keras Sequential model
 model = Sequential()
 model.add(Dense(128, input_dim=maxlen, activation='relu'))  # Adjust input_dim
@@ -88,6 +88,7 @@ Y_pred = model.predict(X_test)
 Y_pred_labels = np.argmax(Y_pred, axis=1)
 Y_test_labels = np.argmax(Y_test, axis=1)
 print(classification_report(Y_test_labels, Y_pred_labels))
+"""
 
 input_text = """ 
 beta sedang berjuang melawan kanker
